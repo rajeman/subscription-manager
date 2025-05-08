@@ -25,7 +25,7 @@ class User(BaseModel):
     first_name = Column(String(100))
     last_name = Column(String(100))
     email = Column(String(100), nullable=False)
-    password = Column(String(100), nullable=False)
+    password = Column(String(255), nullable=False)
     created_at = Column(DateTime, default=func.now(), nullable=False)
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now(), nullable=False)
     last_login = Column(DateTime, nullable=True)
