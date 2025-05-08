@@ -1,5 +1,5 @@
 import datetime
-import jwt
+from flask_jwt_extended import create_access_token
 from flask import jsonify, request, current_app
 from datetime import datetime, timedelta, timezone
 from marshmallow import Schema, fields, validate, ValidationError, pre_load
@@ -74,11 +74,6 @@ def login_user():
     if not check_password_hash(existing_user.password, data['password']):
         return jsonify({"message": "Invalid email or password"}), 401
 
-    payload = {
-        "sub": existing_user.id,
-        "exp": datetime.now(timezone.utc) + timedelta(hours=1),
-        "iat": datetime.now(timezone.utc),
-    }
-    token = jwt.encode(payload, current_app.config['SECRET_KEY'], algorithm="HS256")
+    token = create_access_token(identity=existing_user.id, expires_delta=timedelta(hours=1))
 
     return jsonify({"message": "login successful", "token": token }), 200
