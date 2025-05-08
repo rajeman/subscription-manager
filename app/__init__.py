@@ -1,3 +1,4 @@
+import logging
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -5,6 +6,20 @@ from config import config
 
 db = SQLAlchemy()
 migrate = Migrate()
+
+root_logger = logging.getLogger()
+root_logger.setLevel(logging.INFO)
+root_logger.handlers = [] 
+
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+console_handler.setFormatter(formatter)
+
+root_logger.addHandler(console_handler)
+
+logger = logging.getLogger(__name__)
+
 
 
 def create_app(config_name="development"):
