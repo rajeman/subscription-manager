@@ -194,3 +194,27 @@ def cancel_sbscription():
     existing_subscription.save_to_db()
 
     return jsonify({"message": "Successfully canceled subscription", "subscription":existing_subscription.to_dict()} ), 200
+
+
+@api.route('/subscription', methods=['GET'])
+@jwt_required()
+def get_subscriptions():
+
+
+    current_user_id = get_jwt_identity()
+
+    filter = {'user_id': current_user_id}
+
+    if request.args.get('status'):
+        filter['status'] = request.args.get('status')
+    if request.args.get('plan_id'):
+        filter['plan_id'] = request.args.get('plan_id')
+
+    subscriptions = Subscription.find_all_by_params( **filter)
+
+    result = []
+
+    for subscription in subscriptions:
+        result.append(subscription.to_dict())
+
+    return jsonify({"message": "Successfully retrieved subscription", "subscriptions":result} ), 200

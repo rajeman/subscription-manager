@@ -227,6 +227,14 @@ class Subscription(BaseModel):
     canceled_at = Column(DateTime(timezone=True), nullable=True)
     ended_at = Column(DateTime(timezone=True), nullable=True)
 
+    __table_args__ = (
+        Index('idx_user_id', 'user_id'),
+        Index('idx_plan_id', 'plan_id'),
+        Index('idx_user_id_status', 'user_id', 'status'),
+        Index('idx_plan_id_status', 'plan_id', 'status'),
+        Index('idx_user_id_plan_id', 'user_id', 'plan_id')
+    )
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -244,3 +252,7 @@ class Subscription(BaseModel):
     @classmethod
     def find_by_params(cls, **kwargs):
         return cls.query.filter_by(**kwargs).first()
+
+    @classmethod
+    def find_all_by_params(cls, **kwargs):
+        return cls.query.filter_by(**kwargs).all()
