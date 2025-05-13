@@ -9,9 +9,23 @@ services:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
     ports:
       - '3306:3306'
-    expose:
-      - '3306'
     container_name: subscription_manager_db
+
+  test_database:
+    image: mysql:9.3.0
+    environment:
+      - MYSQL_DATABASE=subscription_manager_test
+      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "3308:3306"
+    container_name: subscription_manager_db_test
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
   web:
     restart: always
     build:
@@ -26,3 +40,17 @@ services:
     depends_on:
       - database 
     container_name: subscription_manager
+
+
+  test:
+    build: .
+    entrypoint: ["/app/entrypoint.sh"] 
+    depends_on:
+      test_database:
+        condition: service_healthy
+    environment:
+      - DEV_DATABASE_URL=mysql+pymysql://root:@test_database:3306/subscription_manager_test
+      - TEST_DATABASE_URL=mysql+pymysql://root:@test_database:3306/subscription_manager_test
+      - FLASK_ENV=testing
+      - SECRET_KEY=secret
+    command: ["pytest"]

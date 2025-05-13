@@ -11,7 +11,7 @@ RUN chmod +x /app/entrypoint.sh
 
 COPY . /app
 
-RUN pip install gunicorn && pip install gevent && pip install flask-migrate
+RUN pip install flask-migrate
 
 
 ENTRYPOINT ["/app/entrypoint.sh"]
