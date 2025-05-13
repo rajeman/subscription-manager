@@ -1,0 +1,28 @@
+version: '2.1'
+services:
+  database:
+    restart: always
+    image: mysql:9.3.0
+    environment:
+      - MYSQL_DATABASE=subscription_manager
+      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    container_name: subscription_manager_db
+  web:
+    restart: always
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      - DEV_DATABASE_URL=mysql+pymysql://root:@database:3306/subscription_manager
+    ports:
+      - '8080:8000'
+    depends_on:
+      - database 
+    container_name: subscription_manager
