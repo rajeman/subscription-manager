@@ -1,11 +1,8 @@
-import datetime
 from collections import defaultdict
 from flask_jwt_extended import jwt_required
-from flask import jsonify, request, current_app
-from datetime import  timedelta
+from flask import jsonify, request
 from marshmallow import Schema, fields, validate, validates_schema, ValidationError, pre_load
 from . import api
-from sqlalchemy.orm import joinedload, with_loader_criteria
 from ..models import db, Plan, PlanInterval, PlanIntervalPrice
 from app import logger
 
@@ -120,7 +117,6 @@ def get_plans():
             .filter(Plan.is_active == True)
             .filter(PlanInterval.is_active == True)
             .filter(PlanIntervalPrice.is_active == True)
-
             )
     if currency:
         query = query.filter(PlanIntervalPrice.currency == currency)
