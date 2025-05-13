@@ -33,6 +33,32 @@ A Flask-based subscription management system that handles user authentication, s
 | `/api/v1/subscription` | PATCH | Cancel subscription |
 | `/api/v1/subscription` | GET | List subscriptions |
 
+
+## Prerequisites
+- Docker (version 20.10.0 or higher)
+- Docker Compose (version 1.29.0 or higher)
+
+## Quick Start with Docker
+
+### 1. Build and Run the Application
+```bash
+# Clone the repository (if not already done)
+git clone <repository-url>
+cd <project-directory>
+
+# Build and start the containers
+docker-compose up --build database app
+
+# The service will be available at:
+http://localhost:8080
+
+```
+
+### 2. Run all tests
+```bash
+docker-compose up --build test
+```
+
 ## Query Optimization
 
 ### Database Indexes
